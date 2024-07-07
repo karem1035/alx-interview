@@ -1,13 +1,12 @@
 #!/usr/bin/python3
 def canUnlockAll(boxes):
     l = len(boxes)
-    oppened = [False] * l
+    opened = [False] * l
 
     def boxCheck(box):
-        oppened[box] = True
-        for box in boxes[box]:
-            if not oppened[box]:
-                boxCheck(box)
-
+        opened[box] = True
+        for key in boxes[box]:
+            if not opened[key]:
+                boxCheck(key)
     boxCheck(0)
-    return (all(oppened))
+    return (all(opened))
