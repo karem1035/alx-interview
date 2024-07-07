@@ -15,17 +15,11 @@ def canUnlockAll(boxes):
         bool: True if all boxes can be unlocked, False otherwise.
     """
 
-    if not isinstance(boxes, list) or len(boxes) == 0:
-        return False
-
-    boxes_length = len(boxes)
-    opened = [False] * boxes_length
-
-    def boxCheck(box):
-        opened[box] = True
-        for key in boxes[box]:
-            if key < boxes_length and not opened[key]:
-                boxCheck(key)
-
-    boxCheck(0)
-    return all(opened)
+    unlocked = [0]  # Keep track of unlocked boxes (initially box 0)
+    for box_id, box in enumerate(boxes):
+        if not box:  # Skip empty boxes (no keys)
+            continue
+        for key in box:
+            if key < len(boxes) and key not in unlocked and key != box_id:
+                unlocked.append(key)
+    return len(unlocked) == len(boxes)  # Check if all boxes are unlocked
