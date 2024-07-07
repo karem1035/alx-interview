@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+Lockbox solution
+"""
+
 
 def canUnlockAll(boxes):
     """
@@ -10,6 +14,10 @@ def canUnlockAll(boxes):
     Returns:
         bool: True if all boxes can be unlocked, False otherwise.
     """
+
+    if not isinstance(boxes, list) or len(boxes) == 0:
+        return False
+
     boxes_length = len(boxes)
     opened = [False] * boxes_length
 
