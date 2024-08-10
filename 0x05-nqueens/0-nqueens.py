@@ -1,125 +1,44 @@
 #!/usr/bin/python3
-""" A program that solves the N queens problem
-"""
-from sys import argv
+""" N queens """
+import sys
 
 
-def check_row(board, index, board_len):
-    """ Check if there is a queen in the row """
-    for r in range(board_len):
-        if board[index][r]:
-            return (False)
+if len(sys.argv) > 2 or len(sys.argv) < 2:
+    print("Usage: nqueens N")
+    exit(1)
 
-    return (True)
+if not sys.argv[1].isdigit():
+    print("N must be a number")
+    exit(1)
 
+if int(sys.argv[1]) < 4:
+    print("N must be at least 4")
+    exit(1)
 
-def check_r_angle(board, row, col, board_len):
-    """ Check if there is a queen in the left angle """
-    c = col
-    for r in range(row, -1, -1):
-        if c >= board_len:
-            break
-        if board[r][c]:
-            return (False)
-        c += 1
-
-    c = col
-    for r in range(row, board_len):
-        if c < 0:
-            break
-        if board[r][c]:
-            return (False)
-        c -= 1
-
-    return (True)
+n = int(sys.argv[1])
 
 
-def check_l_angle(board, row, col, board_len):
-    """ Check if there is a queen in the right angle """
-    c = col
-    for r in range(row, -1, -1):
-        if c < 0:
-            break
-        if board[r][c]:
-            return (False)
-        c -= 1
-
-    c = col
-    for r in range(row, board_len):
-        if c >= board_len:
-            break
-        if board[r][c]:
-            return (False)
-        c += 1
-
-    return (True)
+def queens(n, i=0, a=[], b=[], c=[]):
+    """ find possible positions """
+    if i < n:
+        for j in range(n):
+            if j not in a and i + j not in b and i - j not in c:
+                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
+    else:
+        yield a
 
 
-def chek_all(board, r, c, n):
-    if not check_row(board, r, n):
-        return (False)
-
-    if not check_l_angle(board, r, c, n):
-        return (False)
-
-    return (check_r_angle(board, r, c, n))
-
-
-def main():
-    """ The Main Function """
-
-    argc = len(argv)
-    if argc != 2:
-        print("Usage: nqueens N")
-        exit(1)
-
-    try:
-        n = int(argv[1])
-    except Exception:
-        print("N must be a number")
-        exit(1)
-
-    if n < 4:
-        print("N must be at least 4")
-        exit(1)
-
-    n_range = range(n)
+def solve(n):
+    """ solve """
+    k = []
     i = 0
-    c = 0
-    r = i
-    board = [[0 for _ in n_range] for _ in n_range]
-    result = []
-    while i < n:
-        while (c < n):
-            found = 0
-
-            while (r < n):
-                if chek_all(board, r, c, n):
-                    board[r][c] = 1
-                    result.append([c, r])
-                    found = 1
-                    r = 0
-                    break
-                r += 1
-
-            if not found and len(result):
-                last_i = result.pop()
-                c = last_i[0]
-                r = last_i[1] + 1
-                board[last_i[1]][last_i[0]] = 0
-                continue
-            c += 1
-
-        if len(result):
-            print(result)
-            i = result[0][1]
-            last_i = result.pop()
-            c = last_i[0]
-            r = last_i[1] + 1
-            board[last_i[1]][last_i[0]] = 0
-        else:
-            return
+    for solution in queens(n, 0):
+        for s in solution:
+            k.append([i, s])
+            i += 1
+        print(k)
+        k = []
+        i = 0
 
 
-if __name__ == "__main__":
-    main()
+solve(n)
